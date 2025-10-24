@@ -1,24 +1,28 @@
-
 import sys
 import os
 
 script_path = os.path.abspath(__file__)
 app_dir = os.path.dirname(script_path)
 project_root = os.path.dirname(app_dir)
+src_dir = os.path.join(project_root, 'src')
 
 if project_root not in sys.path:
     sys.path.append(project_root)
+if src_dir not in sys.path:
+    sys.path.append(src_dir)
 
 try:
-    from function.init import gestionar_db
+    from function.init import init_db
 
 except ImportError:
-    print(f"Error: No se pudo importar 'gestionar_db' desde 'funcion.init'.")
+    print(f"Error: No se pudo importar 'gestionar_db' desde 'function.init'.")
     print(f"Asegúrate que la estructura de carpetas sea correcta.")
     print(f"Raíz del proyecto calculada: {project_root}")
     sys.exit(1) 
 
-print("Iniciando aplicación principal...")
+db_path = init_db(project_root)
+if db_path is None:
+    sys.exit(1)
 
 def main():
  

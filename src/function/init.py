@@ -7,7 +7,8 @@ def gestionar_db(directorio_base, ruta_objetivo):
     ruta_objetivo_norm = os.path.normpath(ruta_objetivo)
 
     if os.path.isfile(ruta_objetivo_norm):
-        print(f"✅ Archivo 'paises.csv' encontrado en la ubicación correcta.")
+        print("************************")
+        print(f"✅ Iniciando aplicacion")
         return ruta_objetivo_norm
 
     print(f"Archivo no encontrado en '{ruta_objetivo_norm}'.")
@@ -27,6 +28,9 @@ def gestionar_db(directorio_base, ruta_objetivo):
                     shutil.move(ruta_encontrada, ruta_objetivo_norm)
                     
                     print(f"📦 Archivo movido exitosamente a: {ruta_objetivo_norm}")
+                    print("************************")
+                    print(f"✅ Iniciando aplicacion")
+                    
                     return ruta_objetivo_norm 
                     
                 except Exception as e:
@@ -41,5 +45,10 @@ def gestionar_db(directorio_base, ruta_objetivo):
 
 RUTA_CORRECTA_DB = 'src/db/paises.csv'
 
-path_del_archivo = gestionar_db('./', RUTA_CORRECTA_DB)
+def init_db(project_root):
+    db_path = gestionar_db(project_root, RUTA_CORRECTA_DB)
+    if db_path is None:
+        print("No se pudo preparar la base de datos. Saliendo.")
+        return None
+    return db_path
 
