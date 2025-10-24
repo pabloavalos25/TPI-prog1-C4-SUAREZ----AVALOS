@@ -1,9 +1,27 @@
 
+import sys
+import os
+
+script_path = os.path.abspath(__file__)
+app_dir = os.path.dirname(script_path)
+project_root = os.path.dirname(app_dir)
+
+if project_root not in sys.path:
+    sys.path.append(project_root)
+
+try:
+    from function.init import gestionar_db
+
+except ImportError:
+    print(f"Error: No se pudo importar 'gestionar_db' desde 'funcion.init'.")
+    print(f"Asegúrate que la estructura de carpetas sea correcta.")
+    print(f"Raíz del proyecto calculada: {project_root}")
+    sys.exit(1) 
+
+print("Iniciando aplicación principal...")
+
 def main():
-    #Inicializa el csv
-    #inicializar_archivo()
-    
-    #Menu de opciones
+ 
     while True:
         try:
             print("*****INFO GEOGRAFICO*****")
