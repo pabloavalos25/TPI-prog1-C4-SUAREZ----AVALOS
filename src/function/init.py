@@ -1,6 +1,7 @@
 
 import os
 import shutil  
+import csv
 
 
 def gestionar_db(directorio_base, ruta_objetivo):
@@ -41,7 +42,19 @@ def gestionar_db(directorio_base, ruta_objetivo):
                 return ruta_encontrada
 
     print(f"❌ ERROR: El archivo 'paises.csv' no se encontró en ningún directorio del proyecto.")
-    return None
+    print(f"Creando archivo en la ruta objetivo: {ruta_objetivo_norm}")
+    try:
+        os.makedirs(os.path.dirname(ruta_objetivo_norm), exist_ok=True)
+        with open(ruta_objetivo_norm, 'w', newline='', encoding='utf-8') as archivo_csv:
+            escritor = csv.writer(archivo_csv)
+            escritor.writerow(["nombre","poblacion","superficie","continente"])
+        print(f"📄 Archivo 'paises.csv' creado correctamente en: {ruta_objetivo_norm}")
+        print("************************")
+        print(f"✅ Iniciando aplicacion")
+        return ruta_objetivo_norm
+    except Exception as e:
+        print(f"❌ ERROR: No se pudo crear el archivo. Error: {e}")
+        return None
 
 RUTA_CORRECTA_DB = 'src/db/paises.csv'
 
