@@ -1,20 +1,5 @@
-import csv
-import os
 
-def inicializar_archivo():
-    if not os.path.exists("paises.csv"):
-        with open("paises.csv","w", encoding='UTF-8', newline="") as archivo:
-            encabezado=['nombre','poblacion','superficie','continente']
-            escritor = csv.DictWriter(archivo,filedname=encabezado)
-            escritor.writeheader()
-
-def mostrar_productos():
-    try:
-        with open('paises.csv', 'r') as archivo:
-            pass
-    
-    except FileExistsError:
-        print("Error")
+from tools.validaciones import *
 
 
 def main():
