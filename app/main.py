@@ -1,6 +1,7 @@
 import sys
 import os
 import csv
+import unicodedata
 
 script_path = os.path.abspath(__file__)
 app_dir = os.path.dirname(script_path)
@@ -18,6 +19,7 @@ try:
     from function.statistics import *
     from function.tools import *
     from function.data_load import *
+    from function.shearch import *
     PAISES = "./src/db/paises.csv"
     paises=leer_csv(PAISES)
     
@@ -50,13 +52,15 @@ def main():
 
             match opcion:
                 case 1:
-                        pass
+                        nombre=input("Ingrese el nombre del pais o parte del nombre del pais: ").lower()
+                        buscar_pais(paises, nombre)
                 case 2:
-                        pass
+                        continente= input("Ingrese el nombre del continente: ").capitalize().strip()
+                        filtrar_continente(paises, continente)
                 case 3:
-                        pass
+                        filtrar_poblacion(paises)
                 case 4:
-                        pass
+                        filtrar_superficie(paises)
                 case 5:
                         campo = input("Campo para ordenar (nombre/poblacion/superficie): ").lower()
                         descendente = input("¿Querés orden descendente? (s/n): ").lower()
