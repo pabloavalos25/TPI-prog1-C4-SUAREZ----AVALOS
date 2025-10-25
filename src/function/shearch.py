@@ -1,31 +1,30 @@
 import csv
-
+from function.tools import *
+from function.view import *
 
 def leer_csv(ruta_csv):
     paises = []
-    try:
-        with open('src/db/paises.csv',"r", encoding="utf-8")as archivo:
-            lector = csv.DictReader(archivo)
-            for fila in lector:
-                pais = {
-                    "nombre": fila["nombre"],
+    with open(ruta_csv, "r", encoding="UTF-8-sig", newline="") as f:
+        lector = csv.DictReader(f)
+        for fila in lector:
+                nombre = fila.get("nombre") or fila.get("Nombre")
+                poblacion = fila.get("poblacion") or fila.get("Población")
+                superficie = fila.get("superficie") or fila.get("Superficie_km2")
+                continente = fila.get("continente") or fila.get("Continente")
+                if not (nombre and poblacion and superficie and continente):
+                        raise ValueError("Faltan datos en la fila")       
+                paises.append({
+                    "nombre": fila["nombre"],                
                     "poblacion": int(fila["poblacion"]),
-                    "superficie": int(fila ["superficie"]),
-                    "continente": fila["continente"]
-                }
-                paises.append(pais)
-    except FileNotFoundError:
-        print("No se encontró el archivo csv")
+                    "superficie": float(fila["superficie"]),
+                    "continente": fila["continente"],
+            })
     return paises
-
-paises= leer_csv("paises.csv")
-for p in paises:
-    print(p)
 
 
 def buscar_pais(paises, nombre): #Funcion de buscar paises por su nombre
-    busqueda=input("Ingrese el nombre del pais o parte del nombre del pais: ").lower()
-    encontrado=[p for p in paises if busqueda in p["nombre"].lower()]
+   
+    encontrado=[p for p in paises if nombre in p["nombre"].lower()]
 
     continentes= set(p["continente"] for p in paises)  #Se evita errores de escritura de paises/continente
     print("Continendes disponibles:",",".join(continentes))
@@ -36,20 +35,30 @@ def buscar_pais(paises, nombre): #Funcion de buscar paises por su nombre
     else:
         print("No se encontró país con ese nombre.")
 
-def filtrar_continente(paises): #Funcion de filtrado por continente
-    continente = input("Ingrese el nombre del continente: ").capitalize()
-    continentes = set(p["continente"] for p in paises)
-    print("Continentes disponibles:", ", ".join(continentes))
+#def filtrar_continente(paises, continente): #Funcion de filtrado por continente
+ #   continente=normalizar(continente)
 
-    Resultado = [p for p in paises if p["continente"].lower() ==continente.lower()]
+    #continentes = set(p["continente"] for p in paises)
+    #print("Continentes disponibles:", ", ".join(continente))
 
-    if Resultado:
-        print(f"\nPaises del continente{continente}: ")
-        for p in Resultado:
-            print(f"-{p['nombre']} (Población: {p['poblacion']}, Superficie: {p['superficie']} Km2)")
+    #Resultado = [p for p in paises if p["continente"].lower() ==continente.lower()]
+
+    #if Resultado:
+     #   print(f"\nPaises del continente{continente}: ")
+      #  for p in Resultado:
+      #      print(f"-{p['nombre']} (Población: {p['poblacion']}, Superficie: {p['superficie']} Km2)")
+    #else:
+     #   print("No se encontraron paises en el continente.") 
+
+def filtrar_continente(paises, continente):
+    continente_normalizado = normalizar(continente)
+    resultados = [p for p in paises if continente_normalizado in normalizar(p["continente"])]
+    if resultados:
+        print(f"\n Países en el continente '{continente}':")
+        mostrar_paises(resultados)
     else:
-        print("No se encontraron paises en el continente.") 
-
+       print(f"\n No se encontraron países en el continente '{continente}'.")
+     
 def filtrar_poblacion(paises):
     try:
         minimo = int(input("Ingrese la población minima: "))
@@ -64,7 +73,7 @@ def filtrar_poblacion(paises):
     if resultado:
         print(f"\nPaises con poblacion entre  {minimo} y {maximo}: ")
         for p in resultado:
-            print(f"-p{p['nombre']}, {p['poblacion']} habitantes")
+            print(f"{p['nombre']}, {p['poblacion']} habitantes")
     else:
         print("No se encontraron paises en el rango de población")
 
