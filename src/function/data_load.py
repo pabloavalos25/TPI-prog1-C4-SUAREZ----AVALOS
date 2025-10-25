@@ -1,7 +1,8 @@
 
-from function.tools import normalizar
+from function.tools import *
 
 def agregar_pais(paises):
+    
     print("\n--- Agregar nuevo país ---")
 
     nombre = input("Nombre del país: ").strip()
@@ -29,6 +30,7 @@ def agregar_pais(paises):
 
     paises.append(nuevo_pais)
     print(f"País '{nombre}' agregado correctamente.")
+    
 
 def editar_pais(paises):
     print("\n Editar país ")
