@@ -15,8 +15,11 @@ if src_dir not in sys.path:
 try:
     from function.init import init_db
     from function.view import *
+    from function.statistics import *
+    from function.tools import *
     PAISES = "./src/db/paises.csv"
-    paises = leer_csv(PAISES)
+    paises=leer_csv(PAISES)
+    
 
 except ImportError:
     print(f"Error: No se pudo importar 'gestionar_db' desde 'function.init'.")
@@ -58,7 +61,7 @@ def main():
                         descendente = input("¿Querés orden descendente? (s/n): ").lower()
                         ordenar_paises(paises, campo, descendente)
                 case 6:
-                        pass
+                        mostrar_estadisticas(paises)
                 case 7:
                         pass
                 case 8:

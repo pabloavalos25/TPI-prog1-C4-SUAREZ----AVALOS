@@ -1,6 +1,5 @@
-import unicodedata 
 import csv
-
+from function.tools import normalizar
 
 def leer_csv(ruta_csv):
     paises = []
@@ -16,12 +15,6 @@ def leer_csv(ruta_csv):
     return paises
 
 
-def normalizar(texto):
-    """Convierte texto a minúsculas, elimina espacios y acentos."""
-    texto = texto.lower().strip()
-    texto = unicodedata.normalize('NFD', texto)
-    texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
-    return texto
 
 
 def mostrar_paises(lista_paises):
