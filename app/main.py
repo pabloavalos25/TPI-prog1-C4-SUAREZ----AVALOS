@@ -1,5 +1,6 @@
 import sys
 import os
+import csv
 
 script_path = os.path.abspath(__file__)
 app_dir = os.path.dirname(script_path)
@@ -13,11 +14,12 @@ if src_dir not in sys.path:
 
 try:
     from function.init import init_db
+    from function.view import *
+    PAISES = "./src/db/paises.csv"
+    paises = leer_csv(PAISES)
 
 except ImportError:
     print(f"Error: No se pudo importar 'gestionar_db' desde 'function.init'.")
-    print(f"Asegúrate que la estructura de carpetas sea correcta.")
-    print(f"Raíz del proyecto calculada: {project_root}")
     sys.exit(1) 
 
 db_path = init_db(project_root)
@@ -52,7 +54,9 @@ def main():
                 case 4:
                         pass
                 case 5:
-                        pass
+                        campo = input("Campo para ordenar (nombre/poblacion/superficie): ").lower()
+                        descendente = input("¿Querés orden descendente? (s/n): ").lower()
+                        ordenar_paises(paises, campo, descendente)
                 case 6:
                         pass
                 case 7:
