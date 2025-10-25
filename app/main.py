@@ -17,6 +17,7 @@ try:
     from function.view import *
     from function.statistics import *
     from function.tools import *
+    from function.data_load import *
     PAISES = "./src/db/paises.csv"
     paises=leer_csv(PAISES)
     
@@ -63,9 +64,9 @@ def main():
                 case 6:
                         mostrar_estadisticas(paises)
                 case 7:
-                        pass
+                        agregar_pais(paises)
                 case 8:
-                        pass
+                        editar_pais(paises)
                 case 9:
                         print("Saliendo del programa")
                         break  
