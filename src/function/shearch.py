@@ -1,32 +1,13 @@
 import csv
 from function.tools import *
 from function.view import *
+from function.tools import *
 
-def leer_csv(ruta_csv):
-    paises = []
-    with open(ruta_csv, "r", encoding="UTF-8-sig", newline="") as f:
-        lector = csv.DictReader(f)
-        for fila in lector:
-                nombre = fila.get("nombre") or fila.get("Nombre")
-                poblacion = fila.get("poblacion") or fila.get("Población")
-                superficie = fila.get("superficie") or fila.get("Superficie_km2")
-                continente = fila.get("continente") or fila.get("Continente")
-                if not (nombre and poblacion and superficie and continente):
-                        raise ValueError("Faltan datos en la fila")       
-                paises.append({
-                    "nombre": fila["nombre"],                
-                    "poblacion": int(fila["poblacion"]),
-                    "superficie": float(fila["superficie"]),
-                    "continente": fila["continente"],
-            })
-    return paises
-
-
-def buscar_pais(paises, nombre): #Funcion de buscar paises por su nombre
+def buscar_pais(paises, nombre): 
    
     encontrado=[p for p in paises if nombre in p["nombre"].lower()]
 
-    continentes= set(p["continente"] for p in paises)  #Se evita errores de escritura de paises/continente
+    continentes= set(p["continente"] for p in paises)  
     print("Continendes disponibles:",",".join(continentes))
 
     if encontrado:
@@ -35,20 +16,6 @@ def buscar_pais(paises, nombre): #Funcion de buscar paises por su nombre
     else:
         print("No se encontró país con ese nombre.")
 
-#def filtrar_continente(paises, continente): #Funcion de filtrado por continente
- #   continente=normalizar(continente)
-
-    #continentes = set(p["continente"] for p in paises)
-    #print("Continentes disponibles:", ", ".join(continente))
-
-    #Resultado = [p for p in paises if p["continente"].lower() ==continente.lower()]
-
-    #if Resultado:
-     #   print(f"\nPaises del continente{continente}: ")
-      #  for p in Resultado:
-      #      print(f"-{p['nombre']} (Población: {p['poblacion']}, Superficie: {p['superficie']} Km2)")
-    #else:
-     #   print("No se encontraron paises en el continente.") 
 
 def filtrar_continente(paises, continente):
     continente_normalizado = normalizar(continente)

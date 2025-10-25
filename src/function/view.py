@@ -1,22 +1,6 @@
 import csv
 from function.tools import normalizar
 
-def leer_csv(ruta_csv):
-    paises = []
-    with open(ruta_csv, "r", encoding="utf-8-sig", newline="") as f:
-        lector = csv.DictReader(f)
-        for fila in lector:            
-            paises.append({
-                "nombre": fila["nombre"],                
-                "poblacion": int(fila["poblacion"]),
-                "superficie": float(fila["superficie"]),
-                "continente": fila["continente"],
-            })
-    return paises
-
-
-
-
 def mostrar_paises(lista_paises):
     for p in lista_paises:
         print(f"{p['nombre']} | Población: {p['poblacion']:,} | Superficie: {p['superficie']:,} km² | Continente: {p['continente']}")
