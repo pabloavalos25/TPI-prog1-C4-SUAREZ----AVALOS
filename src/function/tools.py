@@ -1,4 +1,5 @@
 import unicodedata 
+import csv
 from function.view import *
 
 def normalizar(texto):
@@ -8,3 +9,21 @@ def normalizar(texto):
     texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
     return texto
 
+def leer_csv(ruta_csv):
+    paises = []
+    with open(ruta_csv, "r", encoding="UTF-8-sig", newline="") as f:
+        lector = csv.DictReader(f)
+        for fila in lector:
+                nombre = fila.get("nombre") or fila.get("Nombre")
+                poblacion = fila.get("poblacion") or fila.get("Población")
+                superficie = fila.get("superficie") or fila.get("Superficie_km2")
+                continente = fila.get("continente") or fila.get("Continente")
+                if not (nombre and poblacion and superficie and continente):
+                        raise ValueError("Faltan datos en la fila")       
+                paises.append({
+                    "nombre": fila["nombre"],                
+                    "poblacion": int(fila["poblacion"]),
+                    "superficie": float(fila["superficie"]),
+                    "continente": fila["continente"],
+            })
+    return paises
