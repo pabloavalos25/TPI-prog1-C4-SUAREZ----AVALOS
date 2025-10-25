@@ -27,3 +27,18 @@ def leer_csv(ruta_csv):
                     "continente": fila["continente"],
             })
     return paises
+
+
+
+def escribir_csv(ruta_csv: str, paises: list[dict]) -> None:
+    fieldnames = ["nombre", "poblacion", "superficie", "continente"]
+    with open(ruta_csv, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for p in paises:
+            writer.writerow({
+                "nombre": str(p["nombre"]),
+                "poblacion": int(p["poblacion"]),
+                "superficie": float(p["superficie"]),
+                "continente": str(p["continente"]),
+            })

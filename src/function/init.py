@@ -45,10 +45,10 @@ def gestionar_db(directorio_base, ruta_objetivo):
     print(f"Creando archivo en la ruta objetivo: {ruta_objetivo_norm}")
     try:
         os.makedirs(os.path.dirname(ruta_objetivo_norm), exist_ok=True)
-        with open(ruta_objetivo_norm, 'w', newline='', encoding='utf-8') as archivo_csv:
+        with open(ruta_objetivo_norm, 'w', newline='', encoding='utf-8-sig') as archivo_csv:
             escritor = csv.writer(archivo_csv)
             escritor.writerow(["nombre","poblacion","superficie","continente"])
-        print(f"📄 Archivo 'paises.csv' creado correctamente en: {ruta_objetivo_norm}")
+        print(f"📄 Archivo 'paises.csv' creado correctamente en: {ruta_objetivo_norm} pero se encuentra sin datos")
         print("************************")
         print(f"✅ Iniciando aplicacion")
         return ruta_objetivo_norm

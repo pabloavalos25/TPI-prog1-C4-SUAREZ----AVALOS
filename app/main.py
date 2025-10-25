@@ -20,17 +20,15 @@ try:
     from function.tools import *
     from function.data_load import *
     from function.shearch import *
-    PAISES = "./src/db/paises.csv"
-    paises=leer_csv(PAISES)
-    
-
 except ImportError:
     print(f"Error: No se pudo importar 'gestionar_db' desde 'function.init'.")
+    print(f"Raíz del proyecto calculada: {project_root}")
     sys.exit(1) 
 
 db_path = init_db(project_root)
 if db_path is None:
     sys.exit(1)
+paises = leer_csv(db_path)
 
 def main():
  
@@ -63,14 +61,17 @@ def main():
                         filtrar_superficie(paises)
                 case 5:
                         campo = input("Campo para ordenar (nombre/poblacion/superficie): ").lower()
-                        descendente = input("¿Querés orden descendente? (s/n): ").lower()
+                        desc_input = input("¿Querés orden descendente? (s/n): ").strip().lower()
+                        descendente = (desc_input == 's')
                         ordenar_paises(paises, campo, descendente)
                 case 6:
                         mostrar_estadisticas(paises)
                 case 7:
                         agregar_pais(paises)
+                        escribir_csv(db_path, paises)
                 case 8:
                         editar_pais(paises)
+                        escribir_csv(db_path, paises)
                 case 9:
                         print("Saliendo del programa")
                         break  
