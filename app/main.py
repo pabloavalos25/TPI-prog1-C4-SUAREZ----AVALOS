@@ -1,5 +1,7 @@
 import sys
 import os
+import csv
+import unicodedata
 
 script_path = os.path.abspath(__file__)
 app_dir = os.path.dirname(script_path)
@@ -13,11 +15,17 @@ if src_dir not in sys.path:
 
 try:
     from function.init import init_db
+    from function.view import *
+    from function.statistics import *
+    from function.tools import *
+    from function.data_load import *
+    from function.shearch import *
+    PAISES = "./src/db/paises.csv"
+    paises=leer_csv(PAISES)
+    
 
 except ImportError:
     print(f"Error: No se pudo importar 'gestionar_db' desde 'function.init'.")
-    print(f"Asegúrate que la estructura de carpetas sea correcta.")
-    print(f"Raíz del proyecto calculada: {project_root}")
     sys.exit(1) 
 
 db_path = init_db(project_root)
@@ -44,21 +52,25 @@ def main():
 
             match opcion:
                 case 1:
-                        pass
+                        nombre=input("Ingrese el nombre del pais o parte del nombre del pais: ").lower()
+                        buscar_pais(paises, nombre)
                 case 2:
-                        pass
+                        continente= input("Ingrese el nombre del continente: ").capitalize().strip()
+                        filtrar_continente(paises, continente)
                 case 3:
-                        pass
+                        filtrar_poblacion(paises)
                 case 4:
-                        pass
+                        filtrar_superficie(paises)
                 case 5:
-                        pass
+                        campo = input("Campo para ordenar (nombre/poblacion/superficie): ").lower()
+                        descendente = input("¿Querés orden descendente? (s/n): ").lower()
+                        ordenar_paises(paises, campo, descendente)
                 case 6:
-                        pass
+                        mostrar_estadisticas(paises)
                 case 7:
-                        pass
+                        agregar_pais(paises)
                 case 8:
-                        pass
+                        editar_pais(paises)
                 case 9:
                         print("Saliendo del programa")
                         break  
