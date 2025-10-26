@@ -46,3 +46,86 @@ def escribir_csv(ruta_csv: str, paises: list[dict]) -> None:
             
 def limpiar_consola():
     os.system("cls" if os.name == "nt" else "clear")
+    
+def salida():
+    print("*******************👍************************")                                        
+    print("*     Gracias por usar el programa.         *")
+    print("*********************************************")
+    
+def error_tipeo(op):
+    print("*******************🛑*************************")
+    print(f"*🫣  Opcion incorrecta: ingresaste {op}")
+    print("*😁 Recuerda ingresar un numero del 1 al 2")
+    print("*******************🛑*************************")
+    
+def nube():
+    print("**********************************")
+    print("🟢  Ingreso por API ")
+    print("☁️   Servidor nube ")
+    print("🌍  Url: http://149.50.150.15:8000")
+    print("***********************************")
+    
+def local():
+    print("**********************************")
+    print("🟢  Ingreso Modo Local ")
+    print("💻  Servidor Fisico ")
+    print("***********************************")
+
+def seleccion():
+    print("****Seleccione el servidor****")                        
+    print("1. CSV local 💻")
+    print("2. CSV  API  ☁️")
+    print("3. Salir 🛑")
+    op = int(input("Elegí 1 o 2 : "))
+    return op
+
+def menu_principal():
+    print("")   
+    print("**********INFO GEOGRAFICO**********")
+    print("1.  Buscar pais por nombre")
+    print("2.  Filtrar por continente")
+    print("3.  Filtrar por rango de poblacion")
+    print("4.  Filtrar por rango de superficie")
+    print("5.  Ordenar paises")
+    print("6.  Mostrar estadisticas")
+    print("7.  Agregar un pais")
+    print("8.  Editar poblacion y superficie de un pais")
+    print("9.  Borrar país")
+    print("10. Cambiar modo de servidor")
+    print("11. Salir")
+                        
+    opcion=int(input("Ingrese una opcion 1-11: "))
+    print("***********************************")
+    return opcion
+
+def error_tipeo_menu(opcion):
+    print("*******************🛑*************************")
+    print(f"*🫣  Opcion incorrecta: ingresaste {opcion}  ")
+    print("*😁 Recuerda ingresar un numero del 1 al 11   ")
+    print("*******************🛑*************************")
+    
+def except_men_server():
+    print("***********************🛑*******************************")
+    print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
+    print("*😁      Recuerda ingresar un numero del 1 al 2       *")
+    print("***********************🛑*******************************")
+
+def except_men_principal():
+    print("***********************🛑*******************************")
+    print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
+    print("*😁      Recuerda ingresar un numero del 1 al 11       *")
+    print("***********************🛑*******************************")
+    
+def except_local(e):
+    print("*****************************************")
+    print("😡 Advertencia: error local:", e)
+    print("Intente más tarde o seleccione modo nube")
+    print("Disculpe las molestias                   ")
+    print("*****************************************")
+
+def error_server():
+    print("*****************************************")
+    print("😡 Advertencia: api-server no respondió ")
+    print("Intente más tarde o seleccione modo local")
+    print("Disculpe las molestias                   ")
+    print("*****************************************")
