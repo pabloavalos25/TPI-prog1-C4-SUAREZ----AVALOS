@@ -8,7 +8,7 @@ def gestionar_db(directorio_base, ruta_objetivo):
     ruta_objetivo_norm = os.path.normpath(ruta_objetivo)
 
     if os.path.isfile(ruta_objetivo_norm):
-        print("************************")
+        print("***************************")
         print(f"✅ Iniciando aplicacion")
         return ruta_objetivo_norm
 
@@ -29,7 +29,7 @@ def gestionar_db(directorio_base, ruta_objetivo):
                     shutil.move(ruta_encontrada, ruta_objetivo_norm)
                     
                     print(f"📦 Archivo movido exitosamente a: {ruta_objetivo_norm}")
-                    print("************************")
+                    print("***************************")
                     print(f"✅ Iniciando aplicacion")
                     
                     return ruta_objetivo_norm 

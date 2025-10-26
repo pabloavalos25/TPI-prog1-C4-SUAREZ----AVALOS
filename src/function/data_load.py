@@ -98,7 +98,7 @@ def borrar_pais(paises) -> bool:
         print("Operación cancelada.")
         return False
 
-    # Eliminar del arreglo original (por nombre exacto)
+
     pos = next((i for i, p in enumerate(paises) if p["nombre"] == objetivo["nombre"]), None)
     if pos is None:
         print("No se pudo ubicar el registro en la lista original.")
