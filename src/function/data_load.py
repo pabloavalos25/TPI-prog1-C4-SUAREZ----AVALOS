@@ -9,7 +9,7 @@ def agregar_pais(paises):
     while nombre == "":
         nombre = input("El nombre no puede estar vacío. Ingresá nuevamente: ").strip().capitalize()
 
-    continente = input("Continente: ").strip()
+    continente = input("Continente: ").strip().capitalize()
     while continente == "":
         continente = input("El continente no puede estar vacío. Ingresá nuevamente: ").strip().capitalize()
 
