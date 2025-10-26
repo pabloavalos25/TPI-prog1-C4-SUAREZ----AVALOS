@@ -21,6 +21,7 @@ try:
         from function.view import *
         from function import api_client
         from function.api_mode import *
+        from function.validations import *
 
 
 except ImportError:
@@ -38,30 +39,47 @@ paises = leer_csv(db_path)
 MODO_API = False
 
 def elegir_modo():
-        global MODO_API
-        print("****Menu****")
-        print("1) CSV local")
-        print("2) API en servidor")
-        op = input("Elegí 1 o 2 [1]: ").strip()
-        MODO_API = (op == "2")
-        if MODO_API:
+        while True:
+                global MODO_API
                 try:
-                        api_client.health()
-                        print("**********************************")
-                        print("🟢  Ingreso por API ")
-                        print("☁️   Servidor nube ")
-                        print("🌍  Url: http://149.50.150.15:8000")
-                        print("***********************************")
-                except Exception as e:
-                        print("Advertencia: /health no respondió:", e)
-        else:
-                try:
-                        print("**********************************")
-                        print("🟢  Ingreso Modo Local ")
-                        print("💻  Servidor Fisico ")
-                        print("***********************************")
-                except Exception as a:
-                        print("Advertencia: /health no respondió:", a)
+                        print("****Seleccione servidor****")
+                        print("1) CSV local")
+                        print("2) CSV  API")
+                        op = int(input("Elegí 1 o 2 : "))                        
+                        match op:
+                                case 1:
+                                        try:
+                                                print("**********************************")
+                                                print("🟢  Ingreso Modo Local ")
+                                                print("💻  Servidor Fisico ")
+                                                print("***********************************")
+                                                break
+                                        except Exception as c:
+                                                print("Advertencia: error local:", c)
+                                case 2:
+                                        MODO_API = (op == 2)
+                                        if MODO_API:
+                                                try:
+                                                        api_client.health()
+                                                        print("**********************************")
+                                                        print("🟢  Ingreso por API ")
+                                                        print("☁️   Servidor nube ")
+                                                        print("🌍  Url: http://149.50.150.15:8000")
+                                                        print("***********************************")
+                                                        break
+                                                except Exception as b:
+                                                        print("Advertencia: api-server no respondió:", b)
+                                case _:
+                                        print("*******************🛑*************************")
+                                        print(f"*🫣  Opcion incorrecta: ingresaste {op}")
+                                        print("*😁 Recuerda ingresar un numero del 1 al 2")
+                                        print("*******************🛑*************************")
+                except ValueError as a:
+                        print("***********************🛑*******************************")
+                        print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
+                        print("*😁      Recuerda ingresar un numero del 1 al 2       *")
+                        print("***********************🛑*******************************")
+                        
 elegir_modo()
 
 def main():
@@ -143,9 +161,16 @@ def main():
                                         print("Saliendo del programa")
                                         break  
                                 case _:
-                                        print("Opcion incorrecta")
+                                        print("*******************🛑*************************")
+                                        print(f"*🫣  Opcion incorrecta: ingresaste {opcion}")
+                                        print("*😁 Recuerda ingresar un numero del 1 al 10")
+                                        print("*******************🛑*************************")                                        
                 except ValueError:
-                        print("Error")
+                        print("***********************🛑*******************************")
+                        print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
+                        print("*😁      Recuerda ingresar un numero del 1 al 10       *")
+                        print("***********************🛑*******************************")
+                        
                 
 if __name__ == '__main__':
         main()

@@ -2,7 +2,7 @@ import unicodedata
 import csv
 import os
 
-MODO_API = False
+
 def normalizar(texto):
     """Convierte texto a minúsculas, elimina espacios y acentos."""
     texto = texto.lower().strip()
