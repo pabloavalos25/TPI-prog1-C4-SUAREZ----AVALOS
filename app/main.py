@@ -195,12 +195,12 @@ def main():
                                         limpiar_consola()
                                         print("*******************🛑*************************")
                                         print(f"*🫣  Opcion incorrecta: ingresaste {opcion}")
-                                        print("*😁 Recuerda ingresar un numero del 1 al 10")
+                                        print("*😁 Recuerda ingresar un numero del 1 al 11")
                                         print("*******************🛑*************************")                                        
                 except ValueError:
                         print("***********************🛑*******************************")
                         print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
-                        print("*😁      Recuerda ingresar un numero del 1 al 10       *")
+                        print("*😁      Recuerda ingresar un numero del 1 al 11       *")
                         print("***********************🛑*******************************")
                         
                 
