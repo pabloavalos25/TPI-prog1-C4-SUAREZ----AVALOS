@@ -3,6 +3,7 @@ import os
 import csv
 import unicodedata
 
+
 script_path = os.path.abspath(__file__)
 app_dir = os.path.dirname(script_path)
 project_root = os.path.dirname(app_dir)
@@ -20,6 +21,14 @@ try:
     from function.tools import *
     from function.data_load import *
     from function.shearch import *
+    from function.view import *
+    from function import api_client
+    from function.api_mode import (
+    buscar_pais_api, filtrar_continente_api, filtrar_poblacion_api, filtrar_superficie_api,
+    ordenar_paises_api, estadisticas_api, agregar_pais_api, editar_pais_api
+)
+
+
 except ImportError:
     print(f"Error: No se pudo importar 'gestionar_db' desde 'function.init'.")
     print(f"Raíz del proyecto calculada: {project_root}")
@@ -30,11 +39,35 @@ if db_path is None:
     sys.exit(1)
 paises = leer_csv(db_path)
 
+MODO_API = False
+
+def elegir_modo():
+    global MODO_API
+    print("****Menu****")
+    print("1) CSV local")
+    print("2) API en servidor")
+    op = input("Elegí 1 o 2 [1]: ").strip()
+    MODO_API = (op == "2")
+    if MODO_API:
+        try:
+            api_client.health()
+            print("**********************************")
+            print("🟢  Ingreso por API ")
+            print("☁️   Servidor nube ")
+            print("🌍  Url: http://149.50.150.15:8000")
+            print("***********************************")
+            
+        except Exception as e:
+            print("Advertencia: /health no respondió:", e)
+            
+elegir_modo()
+            
 def main():
  
     while True:
         try:
-            print("*****INFO GEOGRAFICO*****")
+        
+            print("**********INFO GEOGRAFICO**********")
             print("1. Buscar pais por nombre")
             print("2. Filtrar por continente")
             print("3. Filtrar por rango de poblacion")
@@ -46,32 +79,57 @@ def main():
             print("9. Salir")
                         
             opcion=int(input("Ingrese una opcion 1-9: "))
-            print("************************")
+            print("***********************************")
 
             match opcion:
                 case 1:
                         nombre=input("Ingrese el nombre del pais o parte del nombre del pais: ").lower()
-                        buscar_pais(paises, nombre)
+                        
+                        if MODO_API:
+                                buscar_pais_api(nombre)
+                        else:
+                                buscar_pais(paises, nombre)
                 case 2:
                         continente= input("Ingrese el nombre del continente: ").capitalize().strip()
-                        filtrar_continente(paises, continente)
+                        if MODO_API:
+                                filtrar_continente_api(continente)
+                        else:
+                                filtrar_continente(paises, continente)
                 case 3:
-                        filtrar_poblacion(paises)
+                        if MODO_API:
+                                filtrar_poblacion_api()
+                        else:
+                                filtrar_poblacion(paises)
                 case 4:
-                        filtrar_superficie(paises)
+                        if MODO_API:
+                                filtrar_superficie_api
+                        else:
+                                filtrar_superficie(paises)
                 case 5:
                         campo = input("Campo para ordenar (nombre/poblacion/superficie): ").lower()
                         desc_input = input("¿Querés orden descendente? (s/n): ").strip().lower()
                         descendente = (desc_input == 's')
-                        ordenar_paises(paises, campo, descendente)
+                        if MODO_API:
+                                ordenar_paises_api(campo, descendente)
+                        else:
+                                ordenar_paises(paises, campo, descendente)
                 case 6:
-                        mostrar_estadisticas(paises)
+                        if MODO_API:
+                                estadisticas_api()
+                        else:
+                                mostrar_estadisticas(paises)
                 case 7:
-                        agregar_pais(paises)
-                        escribir_csv(db_path, paises)
+                        if MODO_API:
+                                agregar_pais_api()
+                        else:
+                                agregar_pais(paises)
+                                escribir_csv(db_path, paises)
                 case 8:
-                        editar_pais(paises)
-                        escribir_csv(db_path, paises)
+                        if MODO_API:
+                                editar_pais_api()
+                        else:
+                                editar_pais(paises)
+                                escribir_csv(db_path, paises)
                 case 9:
                         print("Saliendo del programa")
                         break  

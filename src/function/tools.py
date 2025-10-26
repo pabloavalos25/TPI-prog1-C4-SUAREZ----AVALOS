@@ -1,7 +1,7 @@
 import unicodedata 
 import csv
-from function.view import *
 
+MODO_API = False
 def normalizar(texto):
     """Convierte texto a minúsculas, elimina espacios y acentos."""
     texto = texto.lower().strip()
@@ -42,3 +42,4 @@ def escribir_csv(ruta_csv: str, paises: list[dict]) -> None:
                 "superficie": float(p["superficie"]),
                 "continente": str(p["continente"]),
             })
+            

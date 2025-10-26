@@ -5,13 +5,13 @@ def agregar_pais(paises):
     
     print("\n--- Agregar nuevo país ---")
 
-    nombre = input("Nombre del país: ").strip()
+    nombre = input("Nombre del país: ").strip().capitalize()
     while nombre == "":
-        nombre = input("El nombre no puede estar vacío. Ingresá nuevamente: ").strip()
+        nombre = input("El nombre no puede estar vacío. Ingresá nuevamente: ").strip().capitalize()
 
     continente = input("Continente: ").strip()
     while continente == "":
-        continente = input("El continente no puede estar vacío. Ingresá nuevamente: ").strip()
+        continente = input("El continente no puede estar vacío. Ingresá nuevamente: ").strip().capitalize()
 
     try:
         poblacion = int(input("Población: "))
