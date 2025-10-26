@@ -1,5 +1,6 @@
 import unicodedata 
 import csv
+import os
 
 MODO_API = False
 def normalizar(texto):
@@ -43,3 +44,5 @@ def escribir_csv(ruta_csv: str, paises: list[dict]) -> None:
                 "continente": str(p["continente"]),
             })
             
+def clear_console():
+    os.system("cls" if os.name == "nt" else "clear")

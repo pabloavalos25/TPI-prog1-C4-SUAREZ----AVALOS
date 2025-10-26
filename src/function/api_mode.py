@@ -4,9 +4,11 @@ from function.view import mostrar_paises, ordenar_paises
 from function.statistics import mostrar_estadisticas
 from function.shearch import buscar_pais, filtrar_continente, filtrar_poblacion, filtrar_superficie
 from function import api_client
+from function.api_client import (
+    list_countries, find_by_name, delete_country
+)
 
 def _coerce(items: list[dict]) -> list[dict]:
-    # Asegura el mismo tipo que usa tu CSV: poblacion=int, superficie=float
     for p in items:
         p["poblacion"] = int(p.get("poblacion", 0))
         p["superficie"] = float(p.get("superficie", 0))
@@ -18,36 +20,34 @@ def obtener_paises_api(q=None, continente=None, sort_by=None, desc=False):
     items = api_client.list_countries(q=q, continente=continente, sort_by=sort_by, desc=desc)
     return _coerce(items)
 
-# ---- Buscar / filtrar: reuso tus funciones tal cual ----
 
 def buscar_pais_api(nombre: str):
     paises = obtener_paises_api(q=nombre)
-    # tu buscar_pais espera (paises, nombre_en_minusculas) y printea adentro :contentReference[oaicite:4]{index=4}
+
     buscar_pais(paises, (nombre or "").lower())
 
 def filtrar_continente_api(continente: str):
     paises = obtener_paises_api()
-    filtrar_continente(paises, continente)  # printea adentro :contentReference[oaicite:5]{index=5}
+    filtrar_continente(paises, continente) 
 
 def filtrar_poblacion_api():
     paises = obtener_paises_api()
-    filtrar_poblacion(paises)               # pide rangos y printea adentro :contentReference[oaicite:6]{index=6}
+    filtrar_poblacion(paises)               
 
 def filtrar_superficie_api():
     paises = obtener_paises_api()
-    filtrar_superficie(paises)              # pide rangos y printea adentro :contentReference[oaicite:7]{index=7}
+    filtrar_superficie(paises)              
 
-# ---- Ordenar / estadísticas: reuso tus funciones ----
+
 
 def ordenar_paises_api(campo: str, descendente: bool = False):
     paises = obtener_paises_api()
-    ordenar_paises(paises, campo, descendente)  # hace print adentro :contentReference[oaicite:8]{index=8}
-
+    ordenar_paises(paises, campo, descendente)  
+    
 def estadisticas_api():
     paises = obtener_paises_api()
-    mostrar_estadisticas(paises)                 # hace print adentro :contentReference[oaicite:9]{index=9}
+    mostrar_estadisticas(paises)
 
-# ---- Altas / Ediciones: espejo de data_load, pero contra API ----
 
 def agregar_pais_api():
     print("\n--- Agregar nuevo país (API) ---")
@@ -73,7 +73,7 @@ def agregar_pais_api():
     print(f"País '{creado['nombre']}' creado correctamente en el servidor.")
 
 def editar_pais_api():
-    print("\n Editar país (API) ")  # espejo de data_load.editar_pais :contentReference[oaicite:10]{index=10}
+    print("\n Editar país (API) ")  
     nombre = input("Ingresá el nombre del país que querés editar: ")
     nombre_normalizado = normalizar(nombre)
 
@@ -99,9 +99,9 @@ def editar_pais_api():
         nueva_superficie = float(input(f"Nueva superficie para {pais['nombre']} (km²): "))
 
         patch = {"poblacion": int(nueva_poblacion), "superficie": int(nueva_superficie)}
-        # la API espera enteros; tu vista los formatea igual :contentReference[oaicite:11]{index=11}
+    
         if "id" not in pais:
-            # Si hiciera falta, buscá el id exacto
+            
             exacto = api_client.find_by_name(pais["nombre"])
             if not exacto or "id" not in exacto:
                 print("No se pudo determinar el ID en el servidor.")
@@ -113,3 +113,60 @@ def editar_pais_api():
 
     except ValueError:
         print("Entrada inválida.")
+        
+def borrar_pais_api():
+    print("\n--- Borrar país (API) ---")
+    modo = input("Buscar por (1) nombre o (2) id? [1]: ").strip() or "1"
+
+    if modo == "2":
+        
+        try:
+            cid = int(input("ID: ").strip())
+        except ValueError:
+            print("ID inválido.")
+            return
+        confirma = input(f"Confirmás borrar id={cid}? (s/n): ").strip().lower() == "s"
+        if not confirma:
+            print("Cancelado.")
+            return
+        delete_country(cid)
+        print(f"Borrado id={cid} en el servidor.")
+        return
+
+    
+    nombre = input("Ingresá el nombre (o parte): ").strip()
+    if not nombre:
+        print("Nombre vacío, cancelado.")
+        return
+
+    cand = list_countries(q=nombre, sort_by="nombre")
+    if not cand:
+        print(f"No se encontró ningún país que contenga '{nombre}'.")
+        return
+
+    mostrar_paises(cand)
+    try:
+        idx = int(input("Elegí el número del país a borrar (1..n): ").strip()) - 1
+        if idx < 0 or idx >= len(cand):
+            print("Número inválido.")
+            return
+    except ValueError:
+        print("Entrada inválida.")
+        return
+
+    elegido = cand[idx]
+    
+    if "id" not in elegido:
+        exacto = find_by_name(elegido.get("nombre",""))
+        if not exacto or "id" not in exacto:
+            print("No se pudo determinar el ID en el servidor.")
+            return
+        elegido = exacto
+
+    confirma = input(f"Confirmás borrar '{elegido['nombre']}' (id={elegido['id']})? (s/n): ").strip().lower() == "s"
+    if not confirma:
+        print("Cancelado.")
+        return
+
+    delete_country(elegido["id"])
+    print(f"'{elegido['nombre']}' borrado correctamente (API).")

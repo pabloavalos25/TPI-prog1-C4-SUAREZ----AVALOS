@@ -4,7 +4,6 @@ from function.view import *
 from function.tools import *
 
 def buscar_pais(paises, nombre): 
-   
     encontrado=[p for p in paises if nombre in p["nombre"].lower()]
 
     continentes= set(p["continente"] for p in paises)  
@@ -24,8 +23,8 @@ def filtrar_continente(paises, continente):
         print(f"\n Países en el continente '{continente}':")
         mostrar_paises(resultados)
     else:
-       print(f"\n No se encontraron países en el continente '{continente}'.")
-     
+        print(f"\n No se encontraron países en el continente '{continente}'.")
+        
 def filtrar_poblacion(paises):
     try:
         minimo = int(input("Ingrese la población minima: "))

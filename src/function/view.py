@@ -22,7 +22,6 @@ def ordenar_paises(paises, campo, descendente=False):
     try:
         campo_norm = normalizar(campo)
 
-      
         if "nom" in campo_norm:
             campo = "nombre"
         elif "pob" in campo_norm:
