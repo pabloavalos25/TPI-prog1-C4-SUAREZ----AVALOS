@@ -1,4 +1,4 @@
-# src/function/api_mode.py
+
 from function.tools import normalizar
 from function.view import mostrar_paises, ordenar_paises
 from function.statistics import mostrar_estadisticas
@@ -116,7 +116,7 @@ def editar_pais_api():
         
 def borrar_pais_api():
     print("\n--- Borrar país (API) ---")
-    modo = input("Buscar por (1) nombre o (2) id? [1]: ").strip() or "1"
+    modo = input("Buscar por (1) nombre o (2) id? : ").strip() or "1"
 
     if modo == "2":
         

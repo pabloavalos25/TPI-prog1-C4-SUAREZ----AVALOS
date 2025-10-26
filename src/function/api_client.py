@@ -1,4 +1,4 @@
-# src/function/api_client.py
+
 import requests
 
 BASE_URL = "http://149.50.150.15:8000".rstrip("/")
@@ -52,7 +52,6 @@ def delete_country(cid: int):
         r.raise_for_status()
     return True
 
-# ---- Helpers pequeñitos (no rompen nada) ----
 
 def list_all(sort_by=None, desc=False):
     return list_countries(sort_by=sort_by, desc=desc)
