@@ -1,5 +1,15 @@
-
-import requests
+try:
+    import requests
+except ImportError:
+    raise SystemExit(
+        "*********************😎***************************\n"
+        "* Falta el paquete 'requests'. Instalalo con:     *\n"
+        "*   Windows: py -3.13 -m pip install requests     *\n"
+        "*   Linux/Mac: python3 -m pip install requests    *\n"
+        "* Es fundamental para que el proyecto funcione    *\n"
+        "* Se utiliza para comunicarse con el servidor API *\n"
+        "*********************👌***************************"
+    )
 
 BASE_URL = "http://149.50.150.15:8000".rstrip("/")
 

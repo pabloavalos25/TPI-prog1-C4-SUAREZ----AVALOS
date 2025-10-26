@@ -44,5 +44,5 @@ def escribir_csv(ruta_csv: str, paises: list[dict]) -> None:
                 "continente": str(p["continente"]),
             })
             
-def clear_console():
+def limpiar_consola():
     os.system("cls" if os.name == "nt" else "clear")
