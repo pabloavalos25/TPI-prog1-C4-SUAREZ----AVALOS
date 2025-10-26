@@ -41,81 +41,44 @@ MODO_API = False
 def elegir_modo():
         while True:
                 global MODO_API
-                try:
-                        
-                        print("****Seleccione el servidor****")                        
-                        print("1. CSV local 💻")
-                        print("2. CSV  API  ☁️")
-                        print("3. Salir 🛑")
-                        op = int(input("Elegí 1 o 2 : "))                      
+                try:                        
+                        op=seleccion()                      
                         match op:
                                 case 1:
                                         try:
                                                 limpiar_consola()
-                                                print("**********************************")
-                                                print("🟢  Ingreso Modo Local ")
-                                                print("💻  Servidor Fisico ")
-                                                print("***********************************")
+                                                local()
                                                 break
                                         except Exception as c:
-                                                print("Advertencia: error local:", c)
+                                                limpiar_consola()
+                                                except_local(c)
                                 case 2:
                                         MODO_API = True
                                         try:
                                                 limpiar_consola()
                                                 api_client.health()
-                                                print("**********************************")
-                                                print("🟢  Ingreso por API ")
-                                                print("☁️   Servidor nube ")
-                                                print("🌍  Url: http://149.50.150.15:8000")
-                                                print("***********************************")
+                                                nube()
                                                 break
                                         except Exception as b:
-                                                print("*****************************************")
-                                                print("😡 Advertencia: api-server no respondió")
-                                                print("Intente más tarde o seleccione modo local")
-                                                print("Disculpe las molestias")
-                                                print("*****************************************")
+                                                limpiar_consola()
+                                                error_server()
                                 case 3:
                                         limpiar_consola()
-                                        print("*******************👍************************")                                        
-                                        print("*     Gracias por usar el programa.         *")
-                                        print("*********************************************")                                        
-                                        
+                                        salida()
                                         sys.exit(0)
                                 case _:
-                                        print("*******************🛑*************************")
-                                        print(f"*🫣  Opcion incorrecta: ingresaste {op}")
-                                        print("*😁 Recuerda ingresar un numero del 1 al 2")
-                                        print("*******************🛑*************************")
+                                        limpiar_consola()
+                                        error_tipeo(op)
                 except ValueError as a:
-                        print("***********************🛑*******************************")
-                        print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
-                        print("*😁      Recuerda ingresar un numero del 1 al 2       *")
-                        print("***********************🛑*******************************")
+                        limpiar_consola()
+                        except_men_server()
                         
 elegir_modo()
 
 def main():
         while True:
                 try: 
-                        print("")   
-                        print("**********INFO GEOGRAFICO**********")
-                        print("1.  Buscar pais por nombre")
-                        print("2.  Filtrar por continente")
-                        print("3.  Filtrar por rango de poblacion")
-                        print("4.  Filtrar por rango de superficie")
-                        print("5.  Ordenar paises")
-                        print("6.  Mostrar estadisticas")
-                        print("7.  Agregar un pais")
-                        print("8.  Editar poblacion y superficie de un pais")
-                        print("9.  Borrar país")
-                        print("10. Cambiar modo de servidor")
-                        print("11. Salir")
-                        
-                        opcion=int(input("Ingrese una opcion 1-11: "))
-                        print("***********************************")
-
+                        opcion=menu_principal()
                         match opcion:
                                 case 1:
                                         limpiar_consola()
@@ -187,21 +150,14 @@ def main():
                                         elegir_modo()
                                 case 11:
                                         limpiar_consola()
-                                        print("*******************👍************************")                                        
-                                        print("*     Gracias por usar el programa.         *")
-                                        print("*********************************************")  
+                                        salida()  
                                         break
                                 case _:
                                         limpiar_consola()
-                                        print("*******************🛑*************************")
-                                        print(f"*🫣  Opcion incorrecta: ingresaste {opcion}")
-                                        print("*😁 Recuerda ingresar un numero del 1 al 11")
-                                        print("*******************🛑*************************")                                        
+                                        error_tipeo_menu(opcion)                                       
                 except ValueError:
-                        print("***********************🛑*******************************")
-                        print("*🤔 Opcion incorrecta: No ingresaste un numero valido  *")
-                        print("*😁      Recuerda ingresar un numero del 1 al 11       *")
-                        print("***********************🛑*******************************")
+                        limpiar_consola()
+                        except_men_principal()
                         
                 
 if __name__ == '__main__':
