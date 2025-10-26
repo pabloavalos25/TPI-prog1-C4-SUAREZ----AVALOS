@@ -46,6 +46,7 @@ def elegir_modo():
                         print("****Seleccione el servidor****")                        
                         print("1. CSV local 💻")
                         print("2. CSV  API  ☁️")
+                        print("3. Salir 🛑")
                         op = int(input("Elegí 1 o 2 : "))                      
                         match op:
                                 case 1:
@@ -75,6 +76,13 @@ def elegir_modo():
                                                 print("Intente más tarde o seleccione modo local")
                                                 print("Disculpe las molestias")
                                                 print("*****************************************")
+                                case 3:
+                                        limpiar_consola()
+                                        print("*******************👍************************")                                        
+                                        print("*     Gracias por usar el programa.         *")
+                                        print("*********************************************")                                        
+                                        
+                                        sys.exit(0)
                                 case _:
                                         print("*******************🛑*************************")
                                         print(f"*🫣  Opcion incorrecta: ingresaste {op}")
@@ -179,8 +187,9 @@ def main():
                                         elegir_modo()
                                 case 11:
                                         limpiar_consola()
-                                        print("Gracias por usar el programa. ¡Hasta luego!")
-                                        
+                                        print("*******************👍************************")                                        
+                                        print("*     Gracias por usar el programa.         *")
+                                        print("*********************************************")  
                                         break
                                 case _:
                                         limpiar_consola()
