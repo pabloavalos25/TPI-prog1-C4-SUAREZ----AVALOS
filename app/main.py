@@ -45,6 +45,7 @@ def elegir_modo():
                         op=seleccion()                      
                         match op:
                                 case 1:
+                                        MODO_API = False
                                         try:
                                                 limpiar_consola()
                                                 local()
