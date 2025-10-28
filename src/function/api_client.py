@@ -4,6 +4,8 @@ except ImportError:
     raise SystemExit(
         "*********************😎***************************\n"
         "* Falta el paquete 'requests'. Instalalo con:     *\n"
+        "* Tener presente la version de python que tienes  *\n"
+        "* instaldo por ejemplo tengo pythob 3.13:         *\n"
         "*   Windows: py -3.13 -m pip install requests     *\n"
         "*   Linux/Mac: python3 -m pip install requests    *\n"
         "* Es fundamental para que el proyecto funcione    *\n"

@@ -21,7 +21,6 @@ try:
         from function.view import *
         from function import api_client
         from function.api_mode import *
-        from function.validations import *
 
 
 except ImportError:

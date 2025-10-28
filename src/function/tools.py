@@ -10,23 +10,47 @@ def normalizar(texto):
     texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
     return texto
 
-def leer_csv(ruta_csv):
+def leer_csv(ruta_csv: str):
     paises = []
-    with open(ruta_csv, "r", encoding="UTF-8-sig", newline="") as f:
+    filas_invalidas = 0
+
+    with open(ruta_csv, "r", encoding="utf-8-sig", newline="") as f:
         lector = csv.DictReader(f)
         for fila in lector:
-                nombre = fila.get("nombre") or fila.get("Nombre")
-                poblacion = fila.get("poblacion") or fila.get("Población")
-                superficie = fila.get("superficie") or fila.get("Superficie_km2")
-                continente = fila.get("continente") or fila.get("Continente")
-                if not (nombre and poblacion and superficie and continente):
-                        raise ValueError("Faltan datos en la fila")       
-                paises.append({
-                    "nombre": fila["nombre"],                
-                    "poblacion": int(fila["poblacion"]),
-                    "superficie": float(fila["superficie"]),
-                    "continente": fila["continente"],
+            
+            nombre     = fila.get("nombre")     or fila.get("Nombre")
+            poblacion  = fila.get("poblacion")  or fila.get("Población")
+            superficie = fila.get("superficie") or fila.get("Superficie_km2")
+            continente = fila.get("continente") or fila.get("Continente")
+
+            
+            if not (nombre and poblacion and superficie and continente):
+                filas_invalidas += 1
+                continue
+
+            
+            try:
+                pob = int(float(poblacion))
+                sup = float(superficie)
+            except (TypeError, ValueError):
+                filas_invalidas += 1
+                continue
+
+            paises.append({
+                "nombre": nombre.strip(),
+                "poblacion": pob,
+                "superficie": sup,
+                "continente": continente.strip(),
+                "flag_emoji": (fila.get("flag_emoji") or "").strip()
             })
+
+    if filas_invalidas:
+        print("***************************************************************************************")
+        print(f"🛑 Se ignoraron {filas_invalidas} fila(s) inválida(s) en {ruta_csv}. archivo dañado")
+    if not paises:
+        print("🧐 CSV leído, pero no se obtuvieron filas válidas, csv corrupto o dañado")
+        print("No tendra datos iterables, cuando cargue un pais se creara una base datos nueva")
+        print("****************************************************************************************")
     return paises
 
 
