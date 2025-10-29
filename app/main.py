@@ -158,11 +158,11 @@ def main():
                                                                 "parte del nombre del pais: "
                                                         ).strip().lower()
                                                         if (not nombre) or (not nombre.isalpha()):
-                                                                print("Entrada inválida: use solo letras, sin espacios ni números.")
+                                                                print("Use solo letras, sin espacios ni números.")
                                                                 continue
                                                         break
                                                 except Exception:
-                                                        print("Entrada inválida. Intente nuevamente.")
+                                                        print("Intente nuevamente, algo salio mal.")
                                                         continue
 
                                         if MODO_API:
@@ -177,12 +177,12 @@ def main():
                                                                 "Ingrese el nombre del continente: "
                                                         ).strip()
                                                         if (not continente) or (not continente.isalpha()):
-                                                                print("Entrada inválida: use solo letras, sin espacios ni números.")
+                                                                print("Solo letras, sin espacios ni números.")
                                                                 continue
                                                         continente = continente.capitalize()
                                                         break
                                                 except Exception:
-                                                        print("Entrada inválida. Intente nuevamente.")
+                                                        print("Intente nuevamente, algo salio mal")
                                                         continue
                                         if MODO_API:
                                                 filtrar_continente_api(continente)
@@ -202,14 +202,23 @@ def main():
                                                 filtrar_superficie(paises)
                                 case 5:
                                         limpiar_consola()
-                                        campo = input(
-                                                "Campo para ordenar (nombre/poblacion/"
-                                                "superficie): "
-                                        ).lower()
-                                        desc_input = input(
-                                                "¿Querés orden descendente? (s/n): "
-                                        ).strip().lower()
-                                        descendente = (desc_input == 's')
+                                        while True:
+                                                campo = input(
+                                                        "Campo para ordenar (nombre/poblacion/"
+                                                        "superficie): "
+                                                ).strip().lower()
+                                                if campo and campo.isalpha():
+                                                        break
+                                                print("Use solo letras sin espacios ni números.")
+
+                                        while True:
+                                                desc_input = input(
+                                                        "¿Querés orden descendente? (s/n): "
+                                                ).strip().lower()
+                                                if desc_input in {"s", "n"}:
+                                                        break
+                                                print("Responda con 's' para sí o 'n' para no.")
+                                        descendente = desc_input == "s"
                                         if MODO_API:
                                                 ordenar_paises_api(campo, descendente)
                                         else:
