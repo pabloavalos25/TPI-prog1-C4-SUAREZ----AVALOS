@@ -4,9 +4,7 @@ from function.view import mostrar_paises, ordenar_paises
 from function.statistics import mostrar_estadisticas
 from function.shearch import buscar_pais, filtrar_continente, filtrar_poblacion, filtrar_superficie
 from function import api_client
-from function.api_client import (
-    list_countries, find_by_name, delete_country
-)
+
 
 def _coerce(items: list[dict]) -> list[dict]:
     for p in items:
@@ -17,7 +15,12 @@ def _coerce(items: list[dict]) -> list[dict]:
     return items
 
 def obtener_paises_api(q=None, continente=None, sort_by=None, desc=False):
-    items = api_client.list_countries(q=q, continente=continente, sort_by=sort_by, desc=desc)
+    items = api_client.listar_paises(
+        q=q,
+        continente=continente,
+        ordenar_por=sort_by,
+        descendente=desc,
+    )
     return _coerce(items)
 
 
@@ -64,7 +67,7 @@ def agregar_pais_api():
         print("Error: Población y superficie deben ser numéricos.")
         return
 
-    creado = api_client.create_from_dict({
+    creado = api_client.crear_desde_dict({
         "nombre": nombre,
         "poblacion": poblacion,
         "superficie": superficie,
@@ -101,50 +104,61 @@ def editar_pais_api():
         patch = {"poblacion": int(nueva_poblacion), "superficie": int(nueva_superficie)}
     
         if "id" not in pais:
-            
-            exacto = api_client.find_by_name(pais["nombre"])
+            exacto = api_client.buscar_por_nombre(pais["nombre"])
             if not exacto or "id" not in exacto:
                 print("No se pudo determinar el ID en el servidor.")
                 return
             pais["id"] = exacto["id"]
 
-        actualizado = api_client.patch_country(pais["id"], patch)
+        actualizado = api_client.actualizar_pais_parcial(pais["id"], patch)
         print(f"Datos actualizados para {actualizado['nombre']}.")
 
     except ValueError:
         print("Entrada inválida.")
         
-def borrar_pais_api():
+def borrar_pais_api() -> None:
+    """Borra un país en el servidor (API) por ID o por nombre.
+
+    Flujo:
+        1) Elegir si se buscará por nombre o por id.
+        2) Si es por nombre, se listan candidatos con `mostrar_paises`.
+        3) El usuario elige por índice (1..n).
+        4) Se confirma y se envía el borrado al servidor.
+    """
     print("\n--- Borrar país (API) ---")
-    modo = input("Buscar por (1) nombre o (2) id? : ").strip() or "1"
+    modo = input("¿Buscar por (1) nombre o (2) id? : ").strip() or "1"
 
     if modo == "2":
-        
+        # Borrado directo por ID
         try:
             cid = int(input("ID: ").strip())
         except ValueError:
             print("ID inválido.")
             return
-        confirma = input(f"Confirmás borrar id={cid}? (s/n): ").strip().lower() == "s"
+
+        confirma = input(f"¿Confirmás borrar id={cid}? (s/n): ").strip().lower() == "s"
         if not confirma:
             print("Cancelado.")
             return
-        delete_country(cid)
+
+        api_client.eliminar_pais(cid)
         print(f"Borrado id={cid} en el servidor.")
         return
 
-    
+    # Borrado por nombre (elige entre candidatos)
     nombre = input("Ingresá el nombre (o parte): ").strip()
     if not nombre:
         print("Nombre vacío, cancelado.")
         return
 
-    cand = list_countries(q=nombre, sort_by="nombre")
+    cand = api_client.listar_paises(q=nombre, ordenar_por="nombre")
     if not cand:
         print(f"No se encontró ningún país que contenga '{nombre}'.")
         return
 
+    # Usamos tu función de vista tal como la tenías
     mostrar_paises(cand)
+
     try:
         idx = int(input("Elegí el número del país a borrar (1..n): ").strip()) - 1
         if idx < 0 or idx >= len(cand):
@@ -155,18 +169,26 @@ def borrar_pais_api():
         return
 
     elegido = cand[idx]
-    
+
+    # Resolvemos ID si no vino en el objeto
     if "id" not in elegido:
-        exacto = find_by_name(elegido.get("nombre",""))
+        exacto = api_client.buscar_por_nombre(elegido.get("nombre", ""))
         if not exacto or "id" not in exacto:
             print("No se pudo determinar el ID en el servidor.")
             return
         elegido = exacto
 
-    confirma = input(f"Confirmás borrar '{elegido['nombre']}' (id={elegido['id']})? (s/n): ").strip().lower() == "s"
+    confirma = (
+        input(
+            f"¿Confirmás borrar '{elegido['nombre']}' (id={elegido['id']})? (s/n): "
+        )
+        .strip()
+        .lower()
+        == "s"
+    )
     if not confirma:
         print("Cancelado.")
         return
 
-    delete_country(elegido["id"])
+    api_client.eliminar_pais(elegido["id"])
     print(f"'{elegido['nombre']}' borrado correctamente (API).")

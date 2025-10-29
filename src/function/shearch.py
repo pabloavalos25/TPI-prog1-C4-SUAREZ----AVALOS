@@ -3,11 +3,28 @@ from function.tools import *
 from function.view import *
 from function.tools import *
 
+
+
+def _leer_entero_no_negativo(respuesta: str):
+    """
+    Lee desde input y valida:
+    - solo dígitos (isdigit) -> sin letras, sin espacios, sin signos
+    - entero no negativo
+    Devuelve int o None si es inválido.
+    """
+    s = input(respuesta).strip()
+    if not s.isdigit():
+        print("Ingrese solo números enteros no negativos (sin espacios ni letras).")
+        return None
+    return int(s)
+
+
+
 def buscar_pais(paises, nombre): 
     encontrado=[p for p in paises if nombre in p["nombre"].lower()]
 
     continentes= set(p["continente"] for p in paises)  
-    print("Continendes disponibles:",",".join(continentes))
+    print("Contientes disponibles:",",".join(continentes))
 
     if encontrado:
         for p in encontrado:
@@ -26,36 +43,45 @@ def filtrar_continente(paises, continente):
         print(f"\n No se encontraron países en el continente '{continente}'.")
         
 def filtrar_poblacion(paises):
-    try:
-        minimo = int(input("Ingrese la población minima: "))
-        maximo = int(input("Ingrese la población máxima: "))
-
-    except ValueError:
-        print("Ingrese números válidos!")
+    minimo = _leer_entero_no_negativo("Ingrese la población mínima: ")
+    if minimo is None:
         return
-    
-    resultado= [p for p in paises if minimo <= p['poblacion'] <= maximo]
+    maximo = _leer_entero_no_negativo("Ingrese la población máxima: ")
+    if maximo is None:
+        return
+
+    if minimo > maximo:
+        print("El mínimo no puede ser mayor que el máximo.")
+        return
+
+    resultado = [p for p in paises if minimo <= p.get('poblacion', -1) <= maximo]
 
     if resultado:
-        print(f"\nPaises con poblacion entre  {minimo} y {maximo}: ")
+        print(f"\nPaíses con población entre {minimo} y {maximo}:")
         for p in resultado:
             print(f"{p['nombre']}, {p['poblacion']} habitantes")
     else:
-        print("No se encontraron paises en el rango de población")
+        print("No se encontraron países en ese rango de población.")
+
 
 def filtrar_superficie(paises):
-    try:
-        min=int(input("Ingrese la superficie mínima en km2: "))
-        max=int(input("Ingrese la superficie máxima en Km2: "))
-    except ValueError:
-        print("Ingrese numeros enteros")
-        return
     
-    resultado= [p for p in paises if min <=p["superficie"] <= max]
+    minimo = _leer_entero_no_negativo("Ingrese la superficie mínima en km²: ")
+    if minimo is None:
+        return
+    maximo = _leer_entero_no_negativo("Ingrese la superficie máxima en km²: ")
+    if maximo is None:
+        return
+
+    if minimo > maximo:
+        print("El mínimo no puede ser mayor que el máximo.")
+        return
+
+    resultado = [p for p in paises if minimo <= p.get('superficie', -1) <= maximo]
 
     if resultado:
-        print(f"\nPaises con superficie entre {min} y {max} Km2:")
+        print(f"\nPaíses con superficie entre {minimo} y {maximo} km²:")
         for p in resultado:
-            print(f" {p['nombre']}, {p['superficie']} Km2")
+            print(f"{p['nombre']}, {p['superficie']} km²")
     else:
-        print("No se encontro un país en el rango de superficie.")
+        print("No se encontraron países en ese rango de superficie.")

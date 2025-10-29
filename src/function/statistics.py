@@ -1,8 +1,35 @@
+"""Cálculo e impresión de estadísticas sobre una lista de países.
+
+Este módulo resume información general (máximos, mínimos, promedios y
+cantidad por continente) a partir de una lista de diccionarios que
+representan países.
+"""
 
 from function.tools import normalizar
 
-def mostrar_estadisticas(paises):
 
+def mostrar_estadisticas(paises):
+    """Imprime estadísticas generales de una lista de países.
+
+    Calcula y muestra:
+      - País con mayor población.
+      - País con menor población.
+      - Promedio de población y de superficie.
+      - Cantidad de países por continente (agrupando por nombre normalizado).
+
+    La función imprime por consola y no modifica la lista recibida.
+
+    Args:
+        paises (list[dict]): Lista de países. Cada país debe contener las
+            claves:
+            - 'nombre' (str)
+            - 'poblacion' (int)
+            - 'superficie' (float | int)
+            - 'continente' (str)
+
+    Returns:
+        None
+    """
     if not paises:
         print(" No hay datos disponibles para mostrar estadísticas.")
         return
