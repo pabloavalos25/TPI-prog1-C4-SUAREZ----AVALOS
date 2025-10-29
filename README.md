@@ -1,185 +1,146 @@
-## TPI Programación 1 — Gestión de Datos de Países (Python)
+# TPI Programación 1 — Gestión de Países (Python)
 
-### ¿Qué es?
-Aplicación de consola en Python para consultar y administrar información de países a partir de un archivo CSV o, opcionalmente, consumiendo una API REST remota. Permite búsquedas, filtros, ordenamientos, estadísticas y CRUD básico (agregar, editar, borrar).
+Aplicación de **consola** para consultar y administrar datos de países desde un **CSV local** o una **API REST** remota. Permite **búsquedas**, **filtros**, **ordenamientos**, **estadísticas** y **CRUD** básico.
 
-- **Entrada de datos (modo Local)**: `src/db/paises.csv`
-- **Servidor (modo API)**: FastAPI remoto (ej.: `http://149.50.150.15:8000`)
-- **Interfaz**: Menú por consola (texto)
-- **Persistencia**:
-  - Local: lee/escribe en `src/db/paises.csv`
-  - API: persiste en el servidor vía HTTP
+> Proyecto orientado a cursado inicial (UTN FRM). Código y mensajes en **español**, con funciones sencillas y docstrings estilo Google.
 
 ---
 
-### Requisitos
-- **Python**: 3.10 o superior (probado con 3.13)
-- **Git** (opcional, recomendado para clonar el repositorio)
-- Sistema operativo: Windows, Linux o macOS
-- **Dependencia (modo API)**: `requests`
-  - Windows (PowerShell/CMD):
-    ```bash
-    py -3.13 -m pip install --upgrade pip
-    py -3.13 -m pip install requests
-    ```
-  - Linux / macOS:
-    ```bash
-    python3 -m pip install --upgrade pip
-    python3 -m pip install requests
-    ```
-- Opcional: archivo `requirements.txt` con:
-  ```text
-  requests>=2.32.0
-  ```
-- Sugerencia (opcional): usar entorno virtual
-  - Windows: `python -m venv .venv && .\.venv\Scripts\activate`
-  - Linux/macOS: `python3 -m venv .venv && source .venv/bin/activate`
+## Tabla de contenidos
+- [Características](#características)
+- [Modos de operación](#modos-de-operación)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Configuración rápida](#configuración-rápida)
+- [Ejecución](#ejecución)
+- [Menú principal](#menú-principal)
+- [Estructura de carpetas](#estructura-de-carpetas)
+- [Flujo de datos](#flujo-de-datos)
+- [Guía para desarrolladores](#guía-para-desarrolladores)
+- [Solución de problemas](#solución-de-problemas)
+- [Créditos](#créditos)
 
 ---
 
-### Instalación
-- **Opción A (recomendada) — Clonar el repositorio**:
+## Características
+- **Fuente de datos dual**:
+  - **Local**: `src/db/paises.csv` (lectura/escritura)
+  - **API**: servidor FastAPI (HTTP GET/POST/PATCH/DELETE)
+- **Operaciones**: buscar por nombre, filtrar por continente, filtrar por **población** o **superficie**, ordenar, estadísticas.
+- **CRUD**: agregar, editar y borrar países (en local o API).
+- **Compatibilidad**: mensajes en español y funciones con **nombres en español** (por ejemplo, `estado_servidor`, `listar_paises`, `eliminar_pais`).
+- **Docstrings**: estilo Google en todos los módulos (mantenibles y legibles).
+
+---
+
+## Modos de operación
+- **Local (CSV)**: trabaja con `src/db/paises.csv`. Si no existe, el sistema lo **crea** con el encabezado correspondiente.
+- **API**: consume un servidor FastAPI (URL configurable) y replica el mismo menú de opciones sobre la fuente remota.
+
+---
+
+## Requisitos
+- **Python** \>= 3.10 (probado en 3.13)
+- **Sistema operativo**: Windows / Linux / macOS
+- **Dependencias** (modo API): `requests`
+
+**Instalación rápida de dependencias**
+```bash
+# Windows (PowerShell/CMD)
+py -3.13 -m pip install --upgrade pip
+py -3.13 -m pip install requests
+
+# Linux / macOS
+python3 -m pip install --upgrade pip
+python3 -m pip install requests
+```
+
+Opcional: `requirements.txt`
+```text
+requests>=2.32.0
+```
+
+> Recomendado: crear un **entorno virtual** (venv) antes de instalar dependencias.
+
+---
+
+## Instalación
+**Clonar el repositorio**
 ```bash
 git clone https://github.com/pabloavalos25/TPI-prog1-C4-SUAREZ----AVALOS
 cd TPI-prog1-C4-SUAREZ----AVALOS
 ```
 
-- **Opción B — Descargar ZIP**:
-  1. Abrí el repositorio: [Repositorio en GitHub](https://github.com/pabloavalos25/TPI-prog1-C4-SUAREZ----AVALOS)
-  2. Hacé clic en "Code" → "Download ZIP"
-  3. Descomprimí y abrí la carpeta en tu equipo
+**O descargar ZIP**
+1. Abrí el repo en GitHub
+2. `Code` → `Download ZIP`
+3. Descomprimí la carpeta y abrila en tu editor
 
 ---
 
-### Ejecución
-- **Windows (PowerShell/CMD/Git Bash)**:
+## Configuración rápida
+- **URL de la API**: se define en `src/function/api_client.py` como `BASE_URL` (sin barra final). Ejemplo:
+  ```python
+  BASE_URL = "http://149.50.150.15:8000"
+  ```
+- **CSV inicial**: si `src/db/paises.csv` no existe, se crea automáticamente con encabezado:
+  ```csv
+  nombre,poblacion,superficie,continente
+  ```
+  Codificación: **UTF-8 con BOM** (para compatibilidad en Windows).
+
+---
+
+## Ejecución
+**Windows**
 ```bash
 py app/main.py
-```
-  - Alternativa:
-```bash
+# Alternativa
 python app/main.py
 ```
-
-- **Linux/macOS**:
+**Linux / macOS**
 ```bash
 python3 app/main.py
 ```
-
-Al iniciar, el sistema verificará la existencia de `src/db/paises.csv`. Si el archivo se encuentra en otra carpeta del proyecto, lo moverá a `src/db/`. Si no existe, lo creará con los encabezados correspondientes.
-
-Luego, se te pedirá elegir la fuente de datos:
-```text
-****Seleccione servidor****
-1) CSV local
-2) CSV  API
-```
-- Elegí `1` para usar el CSV local.
-- Elegí `2` para usar el servidor API (se comprobará `/health` en la URL configurada).
-
-> URL por defecto del servidor: ver `BASE_URL` en `src/function/api_client.py` (podés editarla si necesitás apuntar a otra).
+Al inicio, el sistema:
+1. Verifica/crea `src/db/paises.csv` (mueve el archivo si estaba en otra carpeta del proyecto).
+2. Solicita el **modo**:
+   ```text
+   ****Seleccione el servidor****
+   1. CSV local
+   2. CSV API
+   3. Salir
+   ```
+3. Si elegís API, verifica `/health` con `estado_servidor()`.
 
 ---
 
-### Menú principal (Local y API)
-Al ejecutar el programa, verás el siguiente menú:
+## Menú principal
 ```text
 **********INFO GEOGRAFICO**********
-1. Buscar pais por nombre
-2. Filtrar por continente
-3. Filtrar por rango de poblacion
-4. Filtrar por rango de superficie
-5. Ordenar paises
-6. Mostrar estadisticas
-7. Agregar un pais
-8. Editar poblacion y superficie de un pais
-9. Borrar país
+1.  Buscar pais por nombre
+2.  Filtrar por continente
+3.  Filtrar por rango de poblacion
+4.  Filtrar por rango de superficie
+5.  Ordenar paises
+6.  Mostrar estadisticas
+7.  Agregar un pais
+8.  Editar poblacion y superficie de un pais
+9.  Borrar país
 10. Cambiar modo de servidor
 11. Salir
 ```
 
-- **1) Buscar país por nombre**
-  - Ingresá el nombre completo o parcial (ej.: `arg` para Argentina)
-  - El sistema muestra coincidencias y continentes disponibles
-
-- **2) Filtrar por continente**
-  - Ingresá el continente (ej.: `América`, `Europa`, `Asia`)
-  - Se listan los países del continente elegido
-
-- **3) Filtrar por rango de población**
-  - Ingresá valores mínimos y máximos (números enteros)
-  - Se muestran los países cuya población está dentro del rango
-
-- **4) Filtrar por rango de superficie**
-  - Ingresá valores mínimos y máximos (en km²; números)
-  - Se listan los países dentro del rango de superficie
-
-- **5) Ordenar países**
-  - Campo: `nombre` / `poblacion` / `superficie`
-  - Descendente: respondé `s` para sí o `n` para no
-  - Se imprime el listado ordenado
-
-- **6) Mostrar estadísticas**
-  - Muestra país con mayor/menor población, promedios y cantidad por continente
-
-- **7) Agregar un país**
-  - Completá: nombre, continente, población (entero) y superficie (número)
-  - En modo Local, se guarda en `src/db/paises.csv` al confirmar
-  - En modo API, se envía al servidor (HTTP `POST /countries`)
-
-- **8) Editar un país**
-  - Ingresá (parte de) un nombre para buscar y elegí el índice
-  - En modo Local, se actualiza en memoria y luego en CSV
-  - En modo API, se realiza `PATCH /countries/{id}`
-
-- **9) Borrar país**
-  - En modo Local, se elimina del CSV
-  - En modo API, podés borrar por nombre (selección) o por id (`DELETE /countries/{id}`)
-
-- **10) Cambiar modo de servidor**
-  - Permite cambiar entre `CSV local` y `API` sin reiniciar el programa
-  - Al elegir `API`, se verifica la conexión con `/health`
-  - La URL utilizada proviene de `BASE_URL` en `src/function/api_client.py`
-  - Si necesitás otra URL, editá `BASE_URL` manualmente en ese archivo
-
-- **11) Salir**
-  - Finaliza el programa
+**Notas de uso**
+- En **Local**, las modificaciones persisten en `src/db/paises.csv`.
+- En **API**, se invocan los endpoints remotos (`/countries`, `/countries/{id}`, etc.).
 
 ---
 
-### Modo API (detalles rápidos)
-- Cliente HTTP: `src/function/api_client.py`
-- Endpoints utilizados:
-  - `GET /health`
-  - `GET /countries` (listado + filtros/orden)
-  - `GET /countries/{id}` (detalle)
-  - `POST /countries` (crear)
-  - `PATCH /countries/{id}` (editar)
-  - `DELETE /countries/{id}` (borrar)
-
-Tip rápido para probar la API (reemplazá `<IP>` y `<PUERTO>` si aplica):
-```bash
-curl http://<IP>:<PUERTO>/health
-curl "http://<IP>:<PUERTO>/countries?sort_by=nombre"
-```
-
-> Nota: la URL por defecto está en `BASE_URL` dentro de `src/function/api_client.py`. Podés cambiarla editando ese archivo.
-
----
-
-### Funcionalidades
-- **Búsqueda**: por nombre (parcial o exacto)
-- **Filtros**: por continente, por rango de población y por superficie
-- **Ordenamiento**: por nombre, población o superficie (asc/desc)
-- **Estadísticas**: máximos/mínimos, promedios y cantidad por continente
-- **CRUD básico**: agregar, editar y borrar (Local: CSV; API: servidor)
-
----
-
-### Estructura del proyecto
+## Estructura de carpetas
 ```text
 app/
-  └─ main.py               # menú y selección de fuente de datos (Local/API)
+  └─ main.py               # Menú y selección de fuente (Local/API)
 src/
   ├─ db/
   │   └─ paises.csv
@@ -188,42 +149,100 @@ src/
   │   ├─ tp_integrador _programacion_1.pdf
   │   └─ tp_pautas.md
   └─ function/
-      ├─ api_client.py     # cliente HTTP (GET/POST/PATCH/DELETE)
-      ├─ api_mode.py       # integra API con el menú
-      ├─ data_load.py      # altas/ediciones/borrado en modo local
-      ├─ init.py           # prepara/ubica/crea paises.csv
-      ├─ shearch.py        # búsquedas y filtros
-      ├─ statistics.py     # estadísticas
-      ├─ tools.py          # utilidades (normalizar, leer/escribir)
-      ├─ validations.py
-      └─ view.py           # impresión y ordenamiento
-ANALISIS_APLICACION.md
+      ├─ api_client.py     # Cliente HTTP (estado_servidor, listar_paises, etc.)
+      ├─ api_mode.py       # Lógica de modo API: muestra/filtra/ordena con datos remotos
+      ├─ data_load.py      # Altas, ediciones y borrados en modo local (CSV)
+      ├─ init.py           # Ubica/mueve/crea paises.csv al iniciar
+      ├─ shearch.py        # Búsquedas y filtros (local)
+      ├─ statistics.py     # Estadísticas generales
+      ├─ tools.py          # Utilidades: normalizar, leer/escribir CSV, menús y mensajes
+      └─ view.py           # Presentación: listado, ordenar, pedir rangos
 README.md
 ```
 
 ---
 
-### Solución de problemas
-- **Python no es reconocido**: verificá la instalación y que `python`/`py`/`python3` estén en el PATH
-- **Falta `requests` (modo API)**:
-  - Windows: `py -3.13 -m pip install requests`
-  - Linux/macOS: `python3 -m pip install requests`
-- **Imports fallan en otra PC**:
-  - Confirmá que existan `src/__init__.py` y `src/function/__init__.py` (pueden estar vacíos)
-  - Asegurate de instalar `requests` en el mismo Python con el que ejecutás el programa
-- **Problemas con el CSV**: el sistema intentará ubicar o crear `src/db/paises.csv` al iniciar
-- **Acentos o caracteres raros**: usá una consola con soporte UTF-8 (p. ej., Windows Terminal o PowerShell moderno)
+## Flujo de datos
+- **Local**
+  - Lee: `tools.leer_csv()` → lista de dicts
+  - CRUD en memoria: `data_load.*`
+  - Persistencia: `tools.escribir_csv()`
+
+- **API**
+  - Cliente: `api_client.py` (`estado_servidor`, `listar_paises`, `crear_desde_dict`, `actualizar_pais_parcial`, `eliminar_pais`, `buscar_por_nombre`)
+  - Integración con vistas/filtros: `api_mode.py` (pide datos por consola, reutiliza funciones de `view.py`/`shearch.py`)
 
 ---
 
-### Enlaces
-- **Repositorio**: [github.com/pabloavalos25/TPI-prog1-C4-SUAREZ----AVALOS](https://github.com/pabloavalos25/TPI-prog1-C4-SUAREZ----AVALOS)
-- **Análisis técnico**: `ANALISIS_APLICACION.md`
+## Guía para desarrolladores
+### Estilo y documentación
+- Código y nombres en **español**.
+- **Docstrings** estilo Google (módulos, funciones, clases, métodos). Ejemplo:
+  ```python
+  def listar_paises(q: str | None = None) -> list[dict]:
+      """Lista países con filtros y orden opcional.
+
+      Args:
+          q (str | None): Texto a buscar por nombre.
+
+      Returns:
+          list[dict]: Lista de países.
+      """
+  ```
+
+### Calidad opcional (linters)
+- `ruff` (pydocstyle integrado) + `interrogate` para cobertura de docstrings
+  ```toml
+  # pyproject.toml
+  [tool.ruff]
+  line-length = 88
+  extend-select = ["D"]  # reglas de docstrings
+  ignore = ["D203","D213"]
+
+  [tool.interrogate]
+  fail-under = 85
+  exclude = ["tests/*","*/migrations/*","venv/*",".venv/*"]
+  verbose = 1
+  ```
+  ```bash
+  pip install ruff interrogate
+  ruff check .
+  interrogate -c pyproject.toml
+  ```
 
 ---
 
-### Créditos
-Universidad: UTN Regional Mendoza
-TECNICATURA UNIVERSITARIA EN PROGRAMACIÓN
-Año: 2025
-Integrantes: - Avalos Pablo  - Suarez Ismael
+## Solución de problemas
+- **No inicia y aparece un ImportError genérico**
+  - Verificá que `src/` o la raíz que contiene `function/` estén en `sys.path`.
+  - `main.py` ya incluye lógica para ubicar `function`. Si moviste carpetas, revisá las rutas.
+
+- **Falla al importar por renombres (list_countries → listar_paises)**
+  - Asegurate de que **todo** el proyecto use los nombres en **español**:
+    - `health` → `estado_servidor`
+    - `list_countries` → `listar_paises`
+    - `find_by_name` → `buscar_por_nombre`
+    - `delete_country` → `eliminar_pais`
+    - `create_from_dict` → `crear_desde_dict`
+    - `patch_country` → `actualizar_pais_parcial`
+
+- **Python < 3.10**
+  - Evitá anotaciones con `|` (Union). Usá `from typing import Union, Optional`.
+
+- **`requests` no instalado (modo API)**
+  - Instalalo con `py -3.13 -m pip install requests` (Windows) o `python3 -m pip install requests` (Linux/macOS).
+
+- **CSV vacío o con filas inválidas**
+  - El sistema omite filas inválidas e informa cuántas ignoró. Podés abrir el CSV y completar manualmente.
+
+- **Acentos o caracteres raros en consola**
+  - Usá PowerShell o Windows Terminal con UTF-8 (o una terminal moderna en Linux/macOS).
+
+---
+
+## Créditos
+- **Universidad**: UTN — Facultad Regional Mendoza
+- **Carrera**: Tecnicatura Universitaria en Programación
+- **Año**: 2025
+- **Integrantes**: *Avalos, Pablo* — *Suárez, Ismael*
+
