@@ -24,7 +24,7 @@ def buscar_pais(paises, nombre):
     encontrado=[p for p in paises if nombre in p["nombre"].lower()]
 
     continentes= set(p["continente"] for p in paises)  
-    print("Continendes disponibles:",",".join(continentes))
+    print("Contientes disponibles:",",".join(continentes))
 
     if encontrado:
         for p in encontrado:
