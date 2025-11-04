@@ -145,9 +145,10 @@ src/
   ├─ db/
   │   └─ paises.csv
   ├─ doc/
-  │   ├─ rubrica_correccion_programacion_1.pdf
-  │   ├─ tp_integrador _programacion_1.pdf
-  │   └─ tp_pautas.md
+  │   │ └─ rubrica/
+  │   │          ├─ rubrica_correccion_programacion_1.pdf
+  │   │          └─ tp_integrador _programacion_1.pdf
+  │   └─ TPI-Programacion1_2025_Comision4_Grupo6.pdf
   └─ function/
       ├─ api_client.py     # Cliente HTTP (estado_servidor, listar_paises, etc.)
       ├─ api_mode.py       # Lógica de modo API: muestra/filtra/ordena con datos remotos
